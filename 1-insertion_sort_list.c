@@ -1,37 +1,45 @@
 #include "sort.h"
 
 /**
- * insertion_sort_list - implement insert sort algorithm
- * @list: head of the nodes
- * Return: nothing
-  */
+ * insertion_sort_list - Implements insertion sort
+ * @list : head of the list
+ * Return: void (NOTHING)
+ */
 
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *curr1, *curr2, *tmp;
+	listint_t *c = *list, *k, *tmp;
 
 	if (list == NULL || *list == NULL)
 		return;
-	curr1 = (*list)->next;
-	while (curr1)
+
+	while (c != NULL)
 	{
-		tmp = curr1;
-		curr2 = tmp->prev;
-		curr1 = curr1->next;
-		while (curr2 && curr2->n > tmp->n)
+		k = c;
+		while (k->prev != NULL && k->n < k->prev->n)
 		{
-			curr2->next = tmp->next;
-			if (tmp->next)
-				tmp->next->prev = curr2;
-			tmp->next = curr2;
-			tmp->prev = curr2->prev;
-			if (curr2->prev)
-				curr2->prev->next = tmp;
-			if (curr2->prev == NULL)
-				*list = tmp;
-			curr2->prev = tmp;
-			curr2 = tmp->prev;
+			/* Swap */
+			tmp = k->prev;
+			tmp->next = k->next;
+			if (k->next)
+				k->next->prev = tmp;
+			if (!tmp->prev)
+			{
+				k->next = tmp;
+				tmp->prev = k;
+				k->prev = NULL;
+				*list = k;
+			}
+			else
+			{
+				tmp->prev->next = k;
+				k->prev = tmp->prev;
+				tmp->prev = k;
+				k->next = tmp;
+			}
 			print_list(*list);
 		}
+		/*Move c to the next item*/
+		c = c->next;
 	}
 }
