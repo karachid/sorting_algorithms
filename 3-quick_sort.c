@@ -1,62 +1,74 @@
 #include "sort.h"
 
 /**
- * swap - Swaps two integers
+ * swap - swaps the array
+ * @arr : array
+ * @size : size
  * @a : first input
  * @b : second input
- * Return: int (Always 1)
  */
-int swap(int *a, int *b)
+void swap(int *arr, size_t size, int *a, int *b)
 {
-	int tmp;
 
-	tmp = *a;
+	int temp = *a;
 	*a = *b;
-	*b = tmp;
-	return (1);
+	*b = temp;
+
+	print_array(arr, size);
+
 }
 
 /**
- * quick_sort - Implements quick  sort algorithm
- * @array : Array to be sorted
+ * lomuto_partition - partitions the array
+ * @arr : array
+ * @size : size
+ * @low : low
+ * @high : high
+ * Return: int
+ */
+int lomuto_partition(int *arr, size_t size, int low, int high)
+{
+	int pivot = arr[high];
+	int i, j;
+
+	for (i = j = low; j < high; j++)
+	{
+		if (arr[j] < pivot)
+		{
+			swap(arr, size, &arr[j], &arr[i++]);
+		}
+	}
+	swap(arr, size, &arr[i], &arr[high]);
+	return (i);
+}
+
+/**
+ * partition_sort - Recursive calls
+ * @arr : array
+ * @size : size
+ * @low : low
+ * @high : high
+ */
+void partition_sort(int *arr, size_t size, int low, int high)
+{
+	if (low < high)
+	{
+		int pivot_index = lomuto_partition(arr, size,  low, high);
+
+		partition_sort(arr, size,  low, pivot_index - 1);
+		partition_sort(arr, size, pivot_index + 1, high);
+	}
+}
+
+/**
+ * quick_sort - Implements quick sort
+ * @array : input array
  * @size : size of the array
  */
 void quick_sort(int *array, size_t size)
 {
-	int pivot, flag = 1, flag_loop;
-	size_t i, j, len = size;
-
-	if (!array || size == 0)
+	if (!array)
 		return;
-	while (flag)
-	{
-		flag_loop = 0;
-		flag = 0;
-		i = 0;
-		j = 0;
-		pivot = array[size - 1];
-		while (i < size && pivot >= array[i])
-		{
-			i++;
-			j++;
-			if (array[i] == pivot && i == size - 1)
-			{
-				size = size - 1;
-				flag_loop = 1;
-				flag = 1;
-			}
-		}
-		if (flag_loop == 1)
-			continue;
 
-		while (j < size && pivot < array[j])
-			j++;
-		if (i != j)
-		{
-			flag = swap(array + i, array + j);
-			print_array(array, len);
-		}
-		if (flag == 0)
-			break;
-	}
+	partition_sort(array, size, 0, size - 1);
 }
