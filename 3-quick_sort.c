@@ -2,18 +2,64 @@
 
 /**
  * swap - swaps the array
+ * @arr : array
+ * @size : size
  * @a : first input
  * @b : second input
  */
-
-int swap(int *a, int *b)
+void swap(int *arr, size_t size, int *a, int *b)
 {
-	int tmp;
-	
-	tmp = *a;
-	*a = *b;
-	*b = tmp;
-	return (1);
+	if (*a != *b)
+	{
+		int temp = *a;
+		*a = *b;
+		*b = temp;
+
+		print_array(arr, size);
+	}
+
+}
+
+/**
+ * lomuto_partition - partitions the array
+ * @arr : array
+ * @size : size
+ * @low : low
+ * @high : high
+ * Return: int
+ */
+int lomuto_partition(int *arr, size_t size, int low, int high)
+{
+	int pivot = arr[high];
+	int i, j;
+
+	for (i = j = low; j < high; j++)
+	{
+		if (arr[j] < pivot)
+		{
+			swap(arr, size, &arr[j], &arr[i++]);
+		}
+	}
+	swap(arr, size, &arr[i], &arr[high]);
+	return (i);
+}
+
+/**
+ * partition_sort - Recursive calls
+ * @arr : array
+ * @size : size
+ * @low : low
+ * @high : high
+ */
+void partition_sort(int *arr, size_t size, int low, int high)
+{
+	if (low < high)
+	{
+		int pivot_index = lomuto_partition(arr, size,  low, high);
+
+		partition_sort(arr, size,  low, pivot_index - 1);
+		partition_sort(arr, size, pivot_index + 1, high);
+	}
 }
 
 /**
@@ -21,42 +67,10 @@ int swap(int *a, int *b)
  * @array : input array
  * @size : size of the array
  */
-
-void quick_sort(int *a, size_t size)
+void quick_sort(int *array, size_t size)
 {
-	int pivot, flag = 1, flag_loop;
-	size_t i, j, len = size, k = 0;
+	if (!array)
+		return;
 
-	while(flag)
-	{
-		flag_loop = 0;
-		flag = 0;
-		i = k;
-		j = i;
-		pivot = a[size - 1];
-		while (i < size && pivot >= a[i])
-		{
-			i++;
-			j++;
-			if (a[i] == pivot && i == size - 1)
-			{
-				size = size - 1;
-				flag_loop = 1;
-				flag = 1;
-				k = 0;
-			}
-		}
-		if (flag_loop == 1)
-			continue;
-		k = i;
-		while (j < size && pivot < a[j])
-			j++;
-		if (i != j)
-		{
-			flag = swap(a+i, a+j);
-			print_array(a, len);
-		}
-		if (flag == 0)
-			break;
-	}
+	partition_sort(array, size, 0, size - 1);
 }
