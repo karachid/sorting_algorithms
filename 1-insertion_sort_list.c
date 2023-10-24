@@ -25,6 +25,7 @@ void insertion_sort_list(listint_t **list)
 			tmp->next = k->next;
 			if (k->next)
 				k->next->prev = tmp;
+
 			if (!tmp->prev)
 			{
 				k->next = tmp;
@@ -39,6 +40,7 @@ void insertion_sort_list(listint_t **list)
 				tmp->prev = k;
 				k->next = tmp;
 			}
+
 			print_list(*list);
 		}
 		/*Move c to the next item*/
