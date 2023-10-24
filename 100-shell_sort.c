@@ -1,63 +1,37 @@
 #include "sort.h"
 
 /**
- * swap - swaps two values
- * @a : first input
- * @b : second input
- * Return: void (NOTHING)
+ * shell_sort - implementation of shell sort algorithm
+ * @array: array to be sorted
+ * @size: size of the array
  */
-void swap(int *a, int *b)
-{
-	int tmp;
 
-	tmp = *a;
-	*a = *b;
-	*b = tmp;
-}
-
-/**
- * biggest_gap - calculates the biggest gap according to size
- * @size : size according to which gap will be calculated
- * Return: int (biggest gab)
- */
-int biggest_gap(size_t size)
-{
-	int gap = 1, res = 1;
-
-	while (gap < (int)size)
-	{
-		res = gap;
-		gap = (gap * 3 + 1);
-	}
-	return (res);
-}
-
-/**
- * shell_sort - implements shell short algorithm (Knuth sequence)
- * @array : array to be implemented
- * @size : size of the array to be sorted
- */
 void shell_sort(int *array, size_t size)
 {
-	int i, j, gap;
+	int i;
+	size_t j, gap = 1;
+	int tmp;
 
-	if (!array || !size)
+	if (!array)
 		return;
 
-	gap = biggest_gap(size);
+	while (gap <= (size / 3))
+		gap = (gap * 3) + 1;
 
-	while (gap)
+	while (gap > 0)
 	{
-		for (i = gap; i < (int)size; i++)
+		for (j = gap - 1; j < size; j++)
 		{
-			j = i;
-			while (j - gap >= 0 && array[j] < array[j - gap])
+			for (i = j - gap; i >= 0; i = i - gap)
 			{
-				swap(array + j, array + j - gap);
-				j -= gap;
+				if (array[i + gap] >= array[i])
+					break;
+				tmp = array[i + gap];
+				array[i + gap] = array[i];
+				array[i] = tmp;
 			}
 		}
-		gap = (gap - 1) / 3;
 		print_array(array, size);
+		gap = (gap - 1) / 3;
 	}
 }
