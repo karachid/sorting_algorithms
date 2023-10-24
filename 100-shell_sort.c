@@ -39,7 +39,7 @@ int biggest_gap(size_t size)
  */
 void shell_sort(int *array, size_t size)
 {
-	int i, j, gap;
+	int i, j, gap, tmp;
 
 	if (!array || !size)
 		return;
@@ -51,11 +51,13 @@ void shell_sort(int *array, size_t size)
 		for (i = gap; i < (int)size; i++)
 		{
 			j = i;
-			while (j - gap >= 0 && array[j] < array[j - gap])
+			tmp = array[i];
+			while (j > gap - 1 && tmp < array[j - gap])
 			{
-				swap(array + j, array + j - gap);
+				array[j] = array[j - gap];
 				j -= gap;
 			}
+			array[j] = tmp;
 		}
 		gap = (gap - 1) / 3;
 		print_array(array, size);
