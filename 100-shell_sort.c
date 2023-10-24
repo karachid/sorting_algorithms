@@ -40,6 +40,9 @@ int biggest_gap(size_t size)
 void shell_sort(int *array, size_t size)
 {
 	int i, j, gap;
+	
+	if (!array || size == 0)
+		return;
 
 	gap = biggest_gap(size);
 
